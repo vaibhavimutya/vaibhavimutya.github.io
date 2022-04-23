@@ -3,7 +3,7 @@ layout: single
 author_profile: true
 ---
 
-# Graduate Studies Blog
+# Intro
 
 I'm a graduate student pursuing an M.S in Computer Science from the CS&E department at the University of Califonia, Riverside.
 
