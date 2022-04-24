@@ -22,7 +22,7 @@ Dataset used is an AmesHousing.txt of category population which consists of 2930
 
 ### Function Approximation Viewpoint
 
-From a function approximation viewpoint, regression can be defined as learning a function **${y}=f(X)$** where y is the response and X are the set of features.
+From a function approximation viewpoint, regression can be defined as learning a function **$${y}=f(X)$$** where y is the response and X are the set of features.
 
 The form of this function is linear in nature,
 
@@ -30,14 +30,14 @@ $$
 {y} = \beta_0 + \beta_1 x_1, \beta_2 x_2, ... \beta_k x_k + \epsilon
 $$
 
-$\beta_0$ is the bias term \
-$\beta's$ are the weights \
-$\epsilon$ is the error (b/w our linear predictor and true response), and we make some assumption on the error term namely:
-1. Zero mean and constant Var i.e $\approx N(0, \sigma^2)$ \
+$$\beta_0$$ is the bias term \
+$$\beta's$$ are the weights \
+$$\epsilon$$ is the error (b/w our linear predictor and true response), and we make some assumption on the error term namely:
+1. Zero mean and constant Var i.e $$\approx N(0, \sigma^2)$$ \
 2. Independent across observations.
 
 
-**Regularization** is the process where we apply constraints (usually p-norm's) on the model parameters ($\beta's$). Depending on the norm used (L1,L2) we call them lasso or ridge regression respectively.
+**Regularization** is the process where we apply constraints (usually p-norm's) on the model parameters ($$\beta's$$). Depending on the norm used (L1,L2) we call them lasso or ridge regression respectively.
 
 ### Probabilistic Viewpoint
 
@@ -47,9 +47,9 @@ $$
 p(y | X, \theta) = N(y| \mu(X), \sigma^2(X))
 $$
 
-For linear regression, we model $y$ using a normal distribution. Further, we assume mean ($\mu$) is a linear function of $X$, so $\mu = \beta^TX$ and that the variance is constant.
+For linear regression, we model $$y$$ using a normal distribution. Further, we assume mean ($$\mu$$) is a linear function of $$X$$, so $$\mu = \beta^TX$$ and that the variance is constant.
 
-We can extend this framework, by modeling $y$ using another distribution from the exponential family (eg: poisson, bernoulli etc.) and that is known as [Generalized Linear Models](https://en.wikipedia.org/wiki/Generalized_linear_model).
+We can extend this framework, by modeling $$y$$ using another distribution from the exponential family (eg: poisson, bernoulli etc.) and that is known as [Generalized Linear Models](https://en.wikipedia.org/wiki/Generalized_linear_model).
 
 ## Problem we are trying to solve:
 
@@ -57,13 +57,13 @@ Here, we model the dependence of y (SalesPrice) on each of the features in our d
 
 ## Regression with categorical features
 
-We will model the dependence of $y$ on $x$ as a normal distribution whose mean (but not variance) depends on the value of $x$, with one separate mean parameter for each category of $x$.
+We will model the dependence of $$y$$ on $$x$$ as a normal distribution whose mean (but not variance) depends on the value of $$x$$, with one separate mean parameter for each category of $$x$$.
 
 $$
 p(y\mid x) = \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{1}{2\sigma^2}(y-\mu_x)^2}
 $$
 
-Maximum likelihood estimate for $\mu_1, \mu_2, \dots, \mu_K$ and $\sigma^2$ is
+Maximum likelihood estimate for $$\mu_1, \mu_2, \dots, \mu_K$$ and $$\sigma^2$$ is
 
 $$
 \hat{\mu}_j= \frac{\sum_{i | x_i = j} y_i}{\sum_{i | x_i = j} 1}
@@ -73,7 +73,7 @@ $$
 \hat{\sigma}^2 = \frac{1}{m}\sum_{i=1}^m (y_i - \hat{\mu}_{x_i})^2
 $$
 
-That is, the maximum likelihood estimate for $\mu_j$ is the average of all of the $y$ values when $x=j$,
+That is, the maximum likelihood estimate for $$\mu_j$$ is the average of all of the $$y$$ values when $$x=j$$,
 and the maximum likelihood estimate for the variance is the empirical average squared difference between these
 means (predictions) and the true values.
 
@@ -135,7 +135,7 @@ for i,j,k in zip(np.arange(X[:, iscat].shape[1]), dictionary_sigma_asc_int, dict
 ```
 
 <figure>
-  <img src="{{site.url}}/images/regression/categorical_output.jpg" alt="my alt text"/>
+  <img src="{{site.url}}/images/regression/categorical_ouput.jpg" alt="my alt text"/>
 </figure>
 
 ## Regression with continuous features
@@ -236,8 +236,9 @@ We observe a very interesting phenomena here, there is a negative correlation be
 
 No, the above reasoning is incorrect. In the above statement we are interpreting the effect of Kitchen AbvGr on Selling price causally. Hence the incorrect statement.
 
-This paradox can be resolved by conditioning on appropriate event spaces. When we look at P(SalesPrice | Kitchen AbvGr), at a holistic level the correlation between Kitchen AbvGr and Sales Price is negative (-40 is the slope) but when we condition on Neighbourhood we see that, Houses with 2 kitchens are from specific neighbourhoods which have low cost in general therefore for these neighbourhoods (see color carefully) the sales price is low. Compared to light green, yellow and purple for which cost is hight. Therefore, if we condition on P(SalesPrice | Kitchen AbvGr, Neighbourhood = light green, yellow and purple) we will get a positive correlation.
-
 <figure>
   <img src="{{site.url}}/images/regression/simpson_paradox_plot.jpg" alt="my alt text"/>
 </figure>
+
+
+This paradox can be resolved by conditioning on appropriate event spaces. When we look at P(SalesPrice | Kitchen AbvGr), at a holistic level the correlation between Kitchen AbvGr and Sales Price is negative (-40 is the slope) but when we condition on Neighbourhood we see that, Houses with 2 kitchens are from specific neighbourhoods which have low cost in general therefore for these neighbourhoods (see color carefully) the sales price is low. Compared to light green, yellow and purple for which cost is hight. Therefore, if we condition on P(SalesPrice | Kitchen AbvGr, Neighbourhood = light green, yellow and purple) we will get a positive correlation.
