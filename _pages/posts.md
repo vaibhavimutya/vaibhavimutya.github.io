@@ -2,6 +2,7 @@
 title: "Posts"
 permalink: /posts/
 author_profile: true
+classes: wide
 ---
 
 ## Regression, Simpsons Paradox
