@@ -1,6 +1,7 @@
 ---
 title: "Posts"
 permalink: /posts/
+author_profile: true
 ---
 
 ## Regression, Simpsons Paradox
