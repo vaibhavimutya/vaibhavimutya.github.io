@@ -8,12 +8,11 @@ toc_label: "Table of Contents"
 toc_icon: "cog"
 ---
 
-# Overview
 
-## Introduction
+# Introduction
 In this project I build a linear classifier from scratch using MNIST dataset (a standard digit classification dataset). Given a 28 $$\times$$ 28 image containing a digit from 0 to 9, our goal is deducing which digit the image corresponds to. The dataset has 60,000 training and 10,000 test examples. The data can be downloaded from http://yann.lecun.com/exdb/mnist/.
 
-## Formatting the data
+# Formatting the data
 
 As the data is in idx format we need convert into the format which can be read by the numpy.
 
@@ -57,10 +56,10 @@ X_test_flatten_normalized = min_max_scaler.fit_transform(X_test_flatten)
 ```
 
 
-## Linear Classifier
+# Linear Classifier
 Fundamentally, our goal is to learn a matrix W so that given an input x, f(x) = Wx will correctly predict the associated label y. The label $$\hat{y}$$ output by f is the location of the largest entry of f i.e $$\hat{y}$$ = arg max $${0{\le} i {\le} 9 }$$ $$f_i$$(x). Therefore the text accuracy is given by accuracy(W) = P(y = $$\hat{y}$$)
 
-### Training the Linear Classifier model
+## Training the Linear Classifier model
 We have used a quadratic loss and mini batch gradient descent for training. The training loss function at ith example (xi;yi):
 
 $$L_i(W)= \frac{1}{2}||y_i-Wx_i||^2$$
@@ -70,7 +69,7 @@ Minibatch stochastic gradient descent (SGD) has 3 parameters:
 - The batch size which would range from $${1{\le} i {\le} 60000 }$$
 - The learning rate of the gradient.
 
-### Mini-Batch SGD algorithm:
+## Mini-Batch SGD algorithm:
 Initialize: $$W_0$$ = 0
 
 for $${1{\le} t {\le} iterations }$$ :
@@ -146,9 +145,9 @@ def minibatch_SGD_updated(iter, lr, batch_size):
   return(weight_mat_list[-1], training_loss_mini_batch_list, training_loss_all_list, test_loss_list, training_time)
 ```
 
-### Effect of learning rate, Batch size on the loss function
+## Effect of learning rate, Batch size on the loss function
 
-#### Batch size:
+### Batch size:
 
 - **Fundamental Idea:** Fundamentally, batch size dictates the amount of information our optimization algorithm can use to learn the gradient. A small batch size means there is less information at each step to update the gradient.
 - **Effect of Convergence:** With a smaller batch size the probability of the gradient jumping around is also high (as seen in our above plots as well), this would mean that convergence is slower and can take much more iterations when compared to a larger batch size.
@@ -158,9 +157,9 @@ def minibatch_SGD_updated(iter, lr, batch_size):
   <img src="{{site.url}}/images/linear_classifier/batchsize.jpg" alt="my alt text"/>
 </figure>
 
-#### Learning rate
+### Learning rate
 
--**Fundamental Idea:** Fundamentally, learning rate tells us how fast we move in the gradient direction. As you can see below convergence is not very smooth when the learning rate is too low (0.001) or high (0.1) but the it is smooth when the learning rate is in the middle (0.01, 0.05).
+- **Fundamental Idea:** Fundamentally, learning rate tells us how fast we move in the gradient direction. As you can see below for the batch size of 100 the convergence is not very smooth when the learning rate is too low (0.001) or high (0.1) but the it is smooth when the learning rate is in the middle (0.01, 0.05).
 
 <figure>
   <img src="{{site.url}}/images/linear_classifier/lr.jpg" alt="my alt text"/>
