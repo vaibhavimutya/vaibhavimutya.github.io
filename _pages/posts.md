@@ -14,3 +14,8 @@ Regression overview and python implementation with a live explanation of simpson
 
 Python implementation of Minibatch Gradient Descent from scratch. <br>
 [View](https://vaibhavimutya.github.io/linear_classifier/)
+
+## Web Search Engine
+
+End to end implementation of search engine using Python, Java and HTML <br>
+[View](https://vaibhavimutya.github.io/search_engine/)
