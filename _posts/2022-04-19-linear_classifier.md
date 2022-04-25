@@ -147,7 +147,7 @@ def minibatch_SGD_updated(iter, lr, batch_size):
 
 ## Effect of learning rate, Batch size on the loss function
 
-### Batch size:
+### Batch size
 
 - **Fundamental Idea:** Fundamentally, batch size dictates the amount of information our optimization algorithm can use to learn the gradient. A small batch size means there is less information at each step to update the gradient.
 - **Effect of Convergence:** With a smaller batch size the probability of the gradient jumping around is also high (as seen in our above plots as well), this would mean that convergence is slower and can take much more iterations when compared to a larger batch size.

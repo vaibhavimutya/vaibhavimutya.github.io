@@ -30,7 +30,7 @@ The overall high-level design of the Crawling System can be viewed as the follow
 
 We have implemented the depth first search technique. We take the root link as input and extract all the textual data from the web page and then we add all the hyperlinks from that page to the queue data structure. As soon as the link is processed, we pop it from the queue and append all the hyperlinks in the queue. We follow the FIFO (First in First Out) method to pop out the processed queue. Similarly, we process all the hyperlinks in the queue and extract the data and their corresponding hyperlinks and append in the queue. 
 
-We use try and catch error block in order to skip the broken links which interrupt the flow of our program. The program skips these links and pops the other link from the queue in order to process them. The crawled data is then stored in the local file in the excel sheets. You can find the code here. (https://github.com/vaibhavimutya/Search-Engine/blob/master/Crawler.py)
+We use try and catch error block in order to skip the broken links which interrupt the flow of our program. The program skips these links and pops the other link from the queue in order to process them. The crawled data is then stored in the local file in the excel sheets. You can find the code [here](https://github.com/vaibhavimutya/Search-Engine/blob/master/Crawler.py).
 
 ## Issues faced during crawling
 - How to handle duplicate pages?
@@ -55,7 +55,7 @@ In order to handle this, we used the filter function from Python and filtered ou
 - To search a query, we first build a query.
 - Then an Index Reader, Index Searcher, and the Standard Analyzer are used.
 - We use the Query Parser which interprets a string into a Lucene query.
-- Finally, the query is run and the results are obtained. You can find the code here (https://github.com/vaibhavimutya/Search-Engine/blob/master/IndexFiles.java)
+- Finally, the query is run and the results are obtained. You can find the code [here](https://github.com/vaibhavimutya/Search-Engine/blob/master/IndexFiles.java).
 
 ## Lucene Fields
 
@@ -78,7 +78,7 @@ To create the frontend of our search engine we have used HTML, CSS, and JavaScri
 
 ## Lucene Search
 This shows the results based on Lucene indexing. There are 20 results displayed based on the search query. The parameters shown in the result are link, rank and heading.
-The link is the URL shown in anchor tag so that the user can click to show the corresponding web page. Rank shows the rank of the ranking of the result. The heading shows the name of the result which is the corresponding web page. The rank and heading are shown in bold. This shows the results instantaneously. You can find the code here (https://github.com/vaibhavimutya/Search-Engine/blob/master/app.js)
+The link is the URL shown in anchor tag so that the user can click to show the corresponding web page. Rank shows the rank of the ranking of the result. The heading shows the name of the result which is the corresponding web page. The rank and heading are shown in bold. This shows the results instantaneously. You can find the code [here](https://github.com/vaibhavimutya/Search-Engine/blob/master/app.js).
 
 ##  Results
 <figure>
