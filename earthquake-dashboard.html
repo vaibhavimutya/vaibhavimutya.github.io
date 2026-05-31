@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>USGS Earthquake Dashboard — Vaibhavi Mutya</title>
+<meta name="description" content="An interactive Streamlit dashboard built on a pandas pipeline that cleans and enriches raw USGS GeoJSON earthquake feeds." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --cream: #F7F3EE;
+    --cream-warm: #F5EDDF;
+    --cream-dark: #EDE8E1;
+    --cream-border: #D9D2C8;
+    --ink: #1C1917;
+    --ink-secondary: #57534E;
+    --ink-tertiary: #A8A29E;
+    --accent: #C2692A;
+    --accent-deep: #A75620;
+    --accent-light: #FAEADA;
+    --teal: #1D6B5A;
+    --teal-light: #E0F0EB;
+    --blue: #2B5DA1;
+    --blue-light: #E3EDF8;
+    --purple: #5B45A8;
+    --purple-light: #EDEAF8;
+    --font-serif: "Fraunces", Georgia, serif;
+    --font-sans: "DM Sans", -apple-system, sans-serif;
+    --font-mono: "JetBrains Mono", Menlo, monospace;
+  }
+  html, body { background: var(--cream); }
+  body { font-family: var(--font-sans); color: var(--ink); -webkit-font-smoothing: antialiased; line-height: 1.6; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 760px; margin: 0 auto; background: var(--cream); }
+  .tag { display: inline-block; font-size: 11px; padding: 3px 9px; border-radius: 3px; font-weight: 500; margin-right: 4px; margin-top: 4px; letter-spacing: 0.01em; }
+  .tag-blue { background: var(--blue-light); color: var(--blue); }
+  .tag-teal { background: var(--teal-light); color: var(--teal); }
+  .tag-accent { background: var(--accent-light); color: var(--accent); }
+  .tag-purple { background: var(--purple-light); color: var(--purple); }
+  .tag-gray { background: var(--cream-dark); color: var(--ink-secondary); }
+  .nav-link { font-size: 12px; color: var(--ink-secondary); padding: 4px 11px; border: 0.5px solid var(--cream-border); border-radius: 4px; background: var(--cream); transition: all 0.15s; }
+  .nav-link:hover { background: #fff; color: var(--ink); }
+  .hero { padding: 48px 36px 40px; background: var(--cream-warm); border-bottom: 0.5px solid var(--cream-border); position: relative; overflow: hidden; }
+  .hero-contour { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: 0.35; filter: blur(10px); }
+  .hero-content { position: relative; z-index: 2; }
+  .section { padding: 40px 36px; border-bottom: 0.5px solid var(--cream-border); background: #fff; }
+  .section-alt { background: var(--cream); }
+  .section h2 { font-family: var(--font-serif); font-weight: 600; font-size: 22px; color: var(--ink); margin-bottom: 18px; letter-spacing: -0.005em; }
+  .section h3 { font-family: var(--font-serif); font-weight: 600; font-size: 16px; color: var(--ink); margin-top: 26px; margin-bottom: 10px; }
+  .section p { font-size: 14.5px; color: var(--ink-secondary); line-height: 1.85; margin-bottom: 14px; max-width: 640px; }
+  .section ul { margin: 8px 0 14px 0; padding-left: 20px; max-width: 640px; }
+  .section li { font-size: 14.5px; color: var(--ink-secondary); line-height: 1.85; margin-bottom: 6px; }
+  .section strong { color: var(--ink); font-weight: 600; }
+  .label { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-deep); margin-bottom: 14px; }
+  .kicker { font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-deep); margin-bottom: 16px; }
+  .diagram { background: var(--cream); border: 0.5px solid var(--cream-border); border-radius: 8px; padding: 22px 24px; margin: 18px 0 8px; font-family: var(--font-mono); font-size: 12px; line-height: 1.65; color: var(--ink); white-space: pre; overflow-x: auto; }
+  .bottleneck { border-left: 2px solid var(--accent); background: var(--cream); border-radius: 0 6px 6px 0; padding: 16px 20px; margin: 16px 0; }
+  .bottleneck-title { font-family: var(--font-serif); font-weight: 600; font-size: 15.5px; color: var(--ink); margin-bottom: 6px; }
+  .bottleneck-label { font-size: 10.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-right: 6px; }
+  .bottleneck-label.problem { color: var(--accent-deep); }
+  .bottleneck-label.fix { color: var(--teal); }
+  code { font-family: var(--font-mono); font-size: 12.5px; background: var(--cream-dark); padding: 1px 6px; border-radius: 3px; color: var(--ink); }
+  .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--accent); font-weight: 500; margin-bottom: 24px; }
+  .back-link:hover { gap: 10px; }
+  .cta { display: inline-block; padding: 10px 20px; background: var(--accent); color: #fff; border-radius: 6px; font-size: 13.5px; font-weight: 500; }
+  .cta-secondary { background: #fff; color: var(--ink); border: 0.5px solid var(--cream-border); }
+
+  @media (max-width: 640px) {
+    .section, .hero { padding-left: 22px; padding-right: 22px; }
+    .diagram { font-size: 10.5px; padding: 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- NAV -->
+  <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 36px; border-bottom:0.5px solid var(--cream-border); background:rgba(247,243,238,0.92); backdrop-filter:blur(8px); position:sticky; top:0; z-index:10;">
+    <a href="index.html" style="font-size:15px; font-weight:600; color:var(--ink); font-family:var(--font-serif); letter-spacing:0.01em;">Curious Soul</a>
+    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+      <a href="index.html#projects" class="nav-link">projects</a>
+      <a href="index.html#writing" class="nav-link">writing</a>
+      <a href="mailto:vaaibhaviii@gmail.com" style="font-size:12px; color:#fff; padding:4px 12px; background:var(--accent); border-radius:4px; font-weight:500;">collaborate ↗</a>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <svg class="hero-contour" viewBox="0 0 1200 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="cFadeE" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#C2692A" stop-opacity="0.0"/>
+          <stop offset="0.5" stop-color="#C2692A" stop-opacity="0.45"/>
+          <stop offset="1" stop-color="#A75620" stop-opacity="0.15"/>
+        </linearGradient>
+      </defs>
+      <g fill="none" stroke="url(#cFadeE)" stroke-width="1">
+        <path d="M -50 320 C 200 270, 420 360, 640 310 S 980 220, 1250 300"/>
+        <path d="M -50 280 C 200 220, 420 320, 640 260 S 980 170, 1250 250"/>
+        <path d="M -50 240 C 200 170, 420 280, 640 210 S 980 120, 1250 200"/>
+        <path d="M -50 200 C 200 120, 420 240, 640 160 S 980  70, 1250 150"/>
+        <path d="M -50 160 C 200  70, 420 200, 640 110 S 980  20, 1250 100"/>
+        <path d="M -50 120 C 200  20, 420 160, 640  60 S 980 -30, 1250  50"/>
+      </g>
+    </svg>
+
+    <div class="hero-content">
+      <a href="index.html" class="back-link">← Back to all projects</a>
+      <div class="kicker">Project · Personal · Shipped</div>
+      <h1 style="font-size:36px; font-weight:600; font-family:var(--font-serif); line-height:1.12; letter-spacing:-0.015em; color:var(--ink); margin-bottom:16px; max-width:580px;">
+        USGS Earthquake Dashboard
+      </h1>
+      <p style="font-size:15.5px; color:var(--ink-secondary); line-height:1.7; max-width:560px; margin-bottom:20px;">
+        A clean, fast Streamlit dashboard for exploring global seismic activity, backed by a pandas pipeline that turns messy USGS GeoJSON into a reusable analytical dataset.
+      </p>
+      <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;">
+        <span class="tag tag-blue">Python</span>
+        <span class="tag tag-teal">Streamlit</span>
+        <span class="tag tag-accent">Docker</span>
+        <span class="tag tag-gray">pandas</span>
+        <span class="tag tag-purple">USGS GeoJSON API</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE PROBLEM -->
+  <div class="section">
+    <div class="label">01 · The problem & why I built it</div>
+    <h2>Raw USGS data is rich but unreadable.</h2>
+    <p>
+      The USGS publishes a comprehensive real-time earthquake feed. The data is excellent: magnitude, depth, location, tsunami flags, felt reports, alert levels, all of it. The problem is that consuming it directly is painful. The GeoJSON structure is nested, fields are inconsistent, location strings come in formats like <em>"23km SSW of Volcano, Hawaii"</em>, and there's no built-in way to filter or chart it.
+    </p>
+    <p>
+      I wanted a tool that would let me <strong>actually look at the data</strong>. Filter by country, see where events cluster, check how depth correlates with magnitude, look at monthly trends. Less of an "earthquake monitoring" tool, more of a "give me a fast lens on whatever USGS just published" tool.
+    </p>
+  </div>
+
+  <!-- ARCHITECTURE -->
+  <div class="section section-alt">
+    <div class="label">02 · Architecture & flow</div>
+    <h2>A pipeline that cleans once, a dashboard that reads fast.</h2>
+    <p>
+      The deliberate split: heavy cleaning runs in a separate pipeline that writes a clean CSV. The dashboard just reads that CSV. That means the Streamlit app starts in under a second and never has to parse raw GeoJSON at request time.
+    </p>
+
+<div class="diagram">  USGS GeoJSON API (real-time feed)
+              │
+              ▼
+        pipeline.py
+   ┌────────────────────────────────┐
+   │ fetch + normalize JSON         │
+   │ flatten to DataFrame           │
+   │ timezone + timestamp cleanup   │
+   │ region / state / country parse │
+   │ magnitude + depth bucketing    │
+   │ derived metrics:               │
+   │   dmin_km, is_felt,            │
+   │   time_gap_secs, is_above_norm │
+   └────────────────────────────────┘
+              │
+              ▼
+       earthquake_clean.csv
+              │
+              ▼
+            app.py
+   ┌────────────────────────────────┐
+   │ Streamlit dashboard            │
+   │ ├ KPI: total events            │
+   │ ├ Geo map of event locations   │
+   │ ├ Monthly count bar chart      │
+   │ ├ Magnitude type breakdown     │
+   │ ├ Magnitude × significance     │
+   │ └ Depth × magnitude scatter    │
+   └────────────────────────────────┘
+              │
+              ▼
+        Dockerfile (containerized)</div>
+  </div>
+
+  <!-- TECHNICAL DECISIONS -->
+  <div class="section">
+    <div class="label">03 · Key technical decisions & bottlenecks</div>
+    <h2>The constraints came from the data, not the tools.</h2>
+
+    <div class="bottleneck">
+      <div class="bottleneck-title"><span class="bottleneck-label problem">Decision</span> Streamlit over a custom React frontend</div>
+      <p style="margin-top:6px;">I needed an interactive dashboard with maps and charts, with the lowest possible setup cost so I'd actually finish.</p>
+      <p><span class="bottleneck-label fix">Why</span> Streamlit gives me Python-native widgets, built-in caching, and a one-line deployment story. The trade-off is less UI polish, but for a personal analytics tool, that's the right call. I'd reach for React only if I needed custom interactions Streamlit can't express.</p>
+    </div>
+
+    <div class="bottleneck">
+      <div class="bottleneck-title"><span class="bottleneck-label problem">Bottleneck</span> USGS location strings are not parseable</div>
+      <p style="margin-top:6px;">The <code>place</code> field looks like <em>"23km SSW of Volcano, Hawaii"</em> or <em>"central Mid-Atlantic Ridge"</em>. There's no formal schema. Sometimes it ends with a country, sometimes a US state, sometimes a geographic region with no political boundary.</p>
+      <p><span class="bottleneck-label fix">Resolution</span> A multi-step parser in <code>pipeline.py</code>:</p>
+      <ul>
+        <li>Split on the rightmost comma to isolate the location tail.</li>
+        <li>Map known US state names → country = "US".</li>
+        <li>Match known country names directly.</li>
+        <li>Tag everything else as "Unknown / Region" rather than guessing.</li>
+      </ul>
+      <p><strong>Why this conservative approach:</strong> Wrong country labels would silently break the filter. Better to mark unknowns honestly and surface them as their own bucket than to over-confidently mis-classify.</p>
+    </div>
+
+    <div class="bottleneck">
+      <div class="bottleneck-title"><span class="bottleneck-label problem">Bottleneck</span> Doing cleanup on every dashboard load</div>
+      <p style="margin-top:6px;">The first version of the app called the USGS API and ran the full cleaning pipeline on every page render. Load time was 8+ seconds and the dashboard felt unusable.</p>
+      <p><span class="bottleneck-label fix">Resolution</span> Pre-compute. <code>pipeline.py</code> runs separately (or on a schedule), writes <code>earthquake_clean.csv</code> to disk. <code>app.py</code> only reads that file. Startup drops to under a second.</p>
+      <p><strong>Why this matters:</strong> It's a small change in architecture but a big change in UX. It also separates concerns properly. The pipeline can fail or get updated without breaking the dashboard.</p>
+    </div>
+
+    <div class="bottleneck">
+      <div class="bottleneck-title"><span class="bottleneck-label problem">Decision</span> Feature engineering at the pipeline level</div>
+      <p style="margin-top:6px;">Derived metrics like <code>is_felt</code>, <code>time_gap_secs</code>, magnitude buckets, and "higher-than-normal magnitude" flags could live in the dashboard layer.</p>
+      <p><span class="bottleneck-label fix">Approach</span> Compute them once in the pipeline and store them as columns in the clean CSV. The dashboard reads them directly.</p>
+      <p><strong>Why:</strong> It keeps the dashboard code purely about display. Every derived field is documented in one place. If I ever want to swap Streamlit for something else, the cleaned dataset is portable.</p>
+    </div>
+
+    <div class="bottleneck">
+      <div class="bottleneck-title"><span class="bottleneck-label problem">Decision</span> Containerizing with Docker</div>
+      <p style="margin-top:6px;">The app has a handful of dependencies (Streamlit, pandas, plotly, requests). Running it on a fresh machine is annoying.</p>
+      <p><span class="bottleneck-label fix">Approach</span> A small Dockerfile that pins the Python version, installs requirements, and exposes the Streamlit port. <code>docker run</code> and the dashboard is live.</p>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="section section-alt">
+    <div class="label">04 · Results & what they mean</div>
+    <h2>An exploration tool, not a monitoring tool.</h2>
+    <p>The shipped dashboard gives me:</p>
+    <ul>
+      <li>A KPI for total events in the current window.</li>
+      <li>A geographic map of event locations, color-coded by magnitude.</li>
+      <li>Monthly count bar charts to surface seasonal or anomalous activity.</li>
+      <li>A magnitude-type breakdown (mb, ml, mw, etc.) for understanding which sensor networks are reporting.</li>
+      <li>A scatter of magnitude vs. significance to see how USGS weights "importance" beyond raw size.</li>
+      <li>A grouped bar of depth vs. magnitude to test the intuition that deeper events tend to be larger (they don't, neatly).</li>
+    </ul>
+    <p>
+      The <strong>pandas pipeline is the part I'm most proud of</strong>. The clean CSV is the reusable artifact. Anyone can pick it up and build their own analysis on top (Tableau, a notebook, a different framework). The dashboard is one consumer. It's not the product.
+    </p>
+    <p style="font-size: 13.5px; color: var(--ink-tertiary); font-style: italic;">
+      Engineering lesson that generalizes: separate the data-prep layer from the consumption layer, even on small projects. It costs almost nothing to do early and saves real effort later.
+    </p>
+  </div>
+
+  <!-- WHAT'S NEXT -->
+  <div class="section">
+    <div class="label">05 · What I'd build next</div>
+    <h2>Where this could go.</h2>
+    <ul>
+      <li><strong>Scheduled live refresh.</strong> A cron'd pipeline run + dashboard auto-reload so the data is never more than an hour stale.</li>
+      <li><strong>Anomaly detection.</strong> Flag events that are unusual for their location, e.g. a 5.0+ in a region that rarely sees them.</li>
+      <li><strong>Aftershock clustering.</strong> Group events by spatial-temporal proximity to identify main shocks vs. aftershock sequences.</li>
+      <li><strong>Better map layer.</strong> Add tectonic plate boundaries as an overlay. Instantly makes the spatial patterns more interpretable.</li>
+    </ul>
+  </div>
+
+  <!-- CTA -->
+  <div class="section section-alt" style="text-align:center;">
+    <div class="label" style="text-align:center;">See the code</div>
+    <p style="margin-left:auto; margin-right:auto;">All projects live on GitHub. Issues and PRs welcome.</p>
+    <div style="display:flex; gap:10px; justify-content:center; margin-top:20px; flex-wrap:wrap;">
+      <a href="https://github.com/vaibhavimutya?tab=repositories" target="_blank" class="cta">View on GitHub ↗</a>
+      <a href="mailto:vaaibhaviii@gmail.com" class="cta cta-secondary">Email me about this →</a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div style="padding:18px 36px; border-top:0.5px solid var(--cream-border); display:flex; justify-content:space-between; align-items:center; background:#fff; flex-wrap:wrap; gap:8px;">
+    <a href="index.html" style="font-size:11px; color:var(--ink-tertiary);">← vaibhavimutya.github.io</a>
+    <span style="font-size:11px; color:var(--ink-tertiary);">Built by me, obviously.</span>
+  </div>
+
+</div>
+</body>
+</html>

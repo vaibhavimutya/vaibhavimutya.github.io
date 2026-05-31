@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Why interdisciplinary thinking beats depth in the AI era</title>
+<meta name="description" content="An essay on why AI makes broad thinking more valuable than narrow depth." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --cream: #EDE4DB;
+    --cream-warm: #E2D1C0;
+    --cream-border: #CBBBAE;
+    --ink: #1C1917;
+    --ink-secondary: #57534E;
+    --ink-tertiary: #A8A29E;
+    --accent: #C2692A;
+    --accent-deep: #A75620;
+    --accent-light: #FAEADA;
+    --font-serif: "Fraunces", Georgia, serif;
+    --font-sans: "DM Sans", -apple-system, sans-serif;
+  }
+  html, body { background: var(--cream); }
+  body { font-family: var(--font-sans); color: var(--ink); -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 880px; margin: 0 auto; background: var(--cream); }
+  .label { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-tertiary); margin-bottom: 14px; }
+  .section { padding: 32px 36px; border-bottom: 0.5px solid var(--cream-border); }
+  .nav-link { font-size: 12px; color: var(--ink-secondary); padding: 4px 11px; border: 0.5px solid var(--cream-border); border-radius: 4px; cursor: pointer; background: var(--cream); transition: all 0.15s; }
+  .nav-link:hover { background: #fff; color: var(--ink); }
+  @media (max-width: 640px) { .section { padding: 26px 22px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 36px; border-bottom:0.5px solid var(--cream-border); background:rgba(247,243,238,0.92); backdrop-filter:blur(8px); position:sticky; top:0; z-index:10;">
+    <span style="font-size:15px; font-weight:600; color:var(--ink); font-family:var(--font-serif); letter-spacing:0.01em;">Curious Soul</span>
+    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="index.html#projects" class="nav-link">Projects</a>
+      <a href="index.html#writing" class="nav-link">Writing</a>
+      <a href="index.html#resume" class="nav-link">Resume</a>
+      <a href="mailto:vaaibhaviii@gmail.com" style="font-size:12px; color:#fff; padding:4px 12px; background:var(--accent); border-radius:4px; font-weight:500; cursor:pointer;">collaborate ↗</a>
+    </div>
+  </div>
+
+  <div class="section" style="background:#fff;">
+    <div class="label">Writing</div>
+    <h1 style="font-size:34px; font-family:var(--font-serif); margin-bottom:18px; line-height:1.1; color:var(--ink);">Why interdisciplinary thinking beats depth in the AI era</h1>
+    <div style="font-size:14.5px; color:var(--ink-secondary); line-height:1.8; margin-bottom:22px; max-width:760px;">
+      There's a version of career advice that has been correct for most of the last century: pick a lane, go deep, become the expert. Depth was hard to acquire and slow to transfer. If you spent ten years mastering a domain, that knowledge was genuinely difficult for anyone else to replicate quickly. Depth was your moat.
+    </div>
+    <div style="font-size:13px; color:var(--ink-secondary); line-height:1.85; max-width:760px;">
+      <p><strong>AI changes that equation.</strong> Not because expertise stops mattering — it doesn't — but because AI dramatically compresses the time it takes to reach functional competency in a single domain. You can ask an LLM to explain gradient boosting, write a dbt model, summarize a research paper, or generate boilerplate infrastructure code, and it will do all of it competently in seconds. The floor on depth has risen significantly across almost every technical field.</p>
+      <p><strong>What AI can't compress</strong><br>
+      The real challenge today isn't acquiring depth. It's knowing enough to use depth productively.</p>
+      <p>AI can hand you an ocean of code, analysis, and content. But how will you store it? How will you scale it? How will you debug it when it breaks in production in ways that interact with five other systems you didn't fully understand? How will you know when the model is confidently wrong?</p>
+      <p>To do this well, two things are required. First, an inside-out understanding of the problem: what the product actually needs to do, who uses it, and what failure looks like in practice. Second, the ability to direct AI to execute tasks in a specific, strategic way. That kind of orchestration only works when you have a broad enough baseline to know what you're asking for and why.</p>
+      <p>Narrow depth without that broader context makes you a very efficient builder of the wrong thing.</p>
+      <p><strong>What I've learned from working across domains</strong><br>
+      I've worked in computational chemistry, medical research, and talent intelligence — none of it planned. Each domain taught me something different about data that I couldn't have learned by staying in one place.</p>
+      <p>Computational chemistry taught me that data quality is everything upstream. Garbage spectra produce garbage compound identifications, and no amount of sophisticated analysis downstream fixes a bad measurement. Medical research taught me that statistical significance without business context is just noise, a 2% year-over-year decline in NIH funding directed to medical schools only means something if you understand the institutional funding landscape it sits inside. Talent intelligence taught me that real-time systems fail in ways that batch pipelines never do, and that the edge cases that seem unlikely in a design document are the ones that happen constantly in production.</p>
+      <p>None of those lessons transfers cleanly from one domain to another. But together they give me a way of looking at new problems that I couldn't have developed inside a single specialty.</p>
+      <p><strong>Breadth as architecture</strong><br>
+      The analogy I keep coming back to: if you only have deep knowledge in data science, you'll build a model. If you understand software engineering, data analytics, and the business domain, you'll build a sustainable system. You understand not just how to generate the code, but how to integrate it, design robust pipelines around it, and debug it when it interacts with messy real-world constraints.</p>
+      <p>Breadth is what lets you be the architect rather than just the bricklayer. And in a world where generative tools can give anyone a deep, functional answer in seconds, being the person who knows how the pieces fit together and which pieces matter is increasingly where the value lives.</p>
+      <p>The future belongs to people who can connect the dots that AI is simply too disconnected to see.</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

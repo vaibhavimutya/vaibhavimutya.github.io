@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vaibhavi Mutya — Curious Soul</title>
+<meta name="description" content="Vaibhavi Mutya — Data Engineer building cloud-native pipelines, NLP systems, and analytics infrastructure. Personal blog & portfolio." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --cream: #EDE4DB;
+    --cream-warm: #E2D1C0;
+    --cream-dark: #D8C9BF;
+    --cream-border: #CBBBAE;
+    --ink: #1C1917;
+    --ink-secondary: #57534E;
+    --ink-tertiary: #A8A29E;
+    --accent: #C2692A;
+    --accent-deep: #A75620;
+    --accent-light: #FAEADA;
+    --teal: #1D6B5A;
+    --teal-light: #E0F0EB;
+    --blue: #2B5DA1;
+    --blue-light: #E3EDF8;
+    --purple: #5B45A8;
+    --purple-light: #EDEAF8;
+    --font-serif: "Fraunces", Georgia, serif;
+    --font-sans: "DM Sans", -apple-system, sans-serif;
+  }
+  html, body { background: var(--cream); }
+  body { font-family: var(--font-sans); color: var(--ink); -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 880px; margin: 0 auto; background: var(--cream); }
+  .tag { display: inline-block; font-size: 11px; padding: 3px 9px; border-radius: 3px; font-weight: 500; margin-right: 4px; margin-top: 4px; letter-spacing: 0.01em; }
+  .tag-blue { background: var(--blue-light); color: var(--blue); }
+  .tag-teal { background: var(--teal-light); color: var(--teal); }
+  .tag-accent { background: var(--accent-light); color: var(--accent); }
+  .tag-purple { background: var(--purple-light); color: var(--purple); }
+  .tag-gray { background: var(--cream-dark); color: var(--ink-secondary); }
+  .label { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-tertiary); margin-bottom: 14px; }
+  .card { background: #FFFFFF; border: 0.5px solid var(--cream-border); border-radius: 8px; padding: 1rem 1.25rem; transition: box-shadow 0.2s, transform 0.2s; display: block; cursor: pointer; }
+  .card:hover { box-shadow: 0 4px 18px rgba(0,0,0,0.07); transform: translateY(-1px); }
+  .divider { border: none; border-top: 0.5px solid var(--cream-border); margin: 0; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  .section { padding: 32px 36px; border-bottom: 0.5px solid var(--cream-border); }
+  .building-badge { font-size: 10px; color: var(--accent); background: var(--accent-light); border-radius: 3px; padding: 2px 7px; font-weight: 600; letter-spacing: 0.04em; }
+  .nav-link { font-size: 12px; color: var(--ink-secondary); padding: 4px 11px; border: 0.5px solid var(--cream-border); border-radius: 4px; cursor: pointer; background: var(--cream); transition: all 0.15s; }
+  .nav-link:hover { background: #fff; color: var(--ink); }
+  .noise { position: absolute; inset: 0; opacity: 0.03; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"); background-size: 128px; pointer-events: none; z-index: 1; }
+
+  /* Hero with terracotta contour lines */
+  .hero {
+    padding: 64px 36px 56px;
+    background: var(--cream-warm);
+    border-bottom: 0.5px solid var(--cream-border);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-contour {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(10px);
+    opacity: 0.45;
+  }
+  .hero-content { position: relative; z-index: 2; }
+
+  .arrow-link { color: var(--accent); font-weight: 500; transition: gap 0.2s; display: inline-flex; align-items: center; gap: 4px; }
+  .arrow-link:hover { gap: 8px; }
+
+  @media (max-width: 640px) {
+    .section { padding: 26px 22px; }
+    .hero { padding: 48px 22px 40px; }
+    .project-grid { grid-template-columns: 1fr !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 1. NAV -->
+  <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 36px; border-bottom:0.5px solid var(--cream-border); background:rgba(247,243,238,0.92); backdrop-filter:blur(8px); position:sticky; top:0; z-index:10;">
+    <span style="font-size:15px; font-weight:600; color:var(--ink); font-family:var(--font-serif); letter-spacing:0.01em;">Curious Soul</span>
+    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+      <a href="#about" class="nav-link">about</a>
+      <a href="#projects" class="nav-link">projects</a>
+      <a href="#writing" class="nav-link">writing</a>
+      <a href="#resume" class="nav-link">resume</a>
+      <a href="mailto:vaaibhaviii@gmail.com" style="font-size:12px; color:#fff; padding:4px 12px; background:var(--accent); border-radius:4px; font-weight:500; cursor:pointer;">collaborate ↗</a>
+    </div>
+  </div>
+
+  <!-- 2. HERO with terracotta contour lines -->
+  <div class="hero" id="about">
+    <!-- Flowing terracotta contour lines (SVG) -->
+    <svg class="hero-contour" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="cFade" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#C2692A" stop-opacity="0.0"/>
+          <stop offset="0.5" stop-color="#C2692A" stop-opacity="0.45"/>
+          <stop offset="1" stop-color="#A75620" stop-opacity="0.25"/>
+        </linearGradient>
+      </defs>
+      <g fill="none" stroke="url(#cFade)" stroke-width="1.1">
+        <!-- Each path is a flowing contour line; they nest like topographic rings -->
+        <path d="M -80 540 C 180 480, 360 600, 560 540 S 880 420, 1080 510 S 1280 580, 1320 540"/>
+        <path d="M -80 500 C 180 430, 360 560, 560 490 S 880 360, 1080 460 S 1280 540, 1320 490"/>
+        <path d="M -80 460 C 180 380, 360 520, 560 440 S 880 300, 1080 410 S 1280 500, 1320 440"/>
+        <path d="M -80 420 C 180 330, 360 480, 560 390 S 880 240, 1080 360 S 1280 460, 1320 390"/>
+        <path d="M -80 380 C 180 280, 360 440, 560 340 S 880 180, 1080 310 S 1280 420, 1320 340"/>
+        <path d="M -80 340 C 180 230, 360 400, 560 290 S 880 120, 1080 260 S 1280 380, 1320 290"/>
+        <path d="M -80 300 C 180 180, 360 360, 560 240 S 880  60, 1080 210 S 1280 340, 1320 240"/>
+        <path d="M -80 260 C 180 130, 360 320, 560 190 S 880   0, 1080 160 S 1280 300, 1320 190"/>
+        <path d="M -80 220 C 180  80, 360 280, 560 140 S 880 -60, 1080 110 S 1280 260, 1320 140"/>
+        <path d="M -80 180 C 180  30, 360 240, 560  90 S 880 -120,1080  60 S 1280 220, 1320  90"/>
+        <path d="M -80 140 C 180 -20, 360 200, 560  40 S 880 -180,1080  10 S 1280 180, 1320  40"/>
+        <!-- A few descending ridge lines for depth -->
+        <path d="M -80 600 C 220 560, 420 660, 660 600 S 980 500, 1280 580" stroke-opacity="0.35"/>
+        <path d="M -80 640 C 220 610, 420 700, 660 640 S 980 560, 1280 620" stroke-opacity="0.25"/>
+      </g>
+    </svg>
+    <div class="noise"></div>
+
+    <div class="hero-content">
+      <div style="font-size:11px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent-deep); margin-bottom:18px;">Builder · Vaibhavi Mutya</div>
+
+      <div style="font-size:34px; font-weight:600; color:var(--ink); line-height:1.15; max-width:540px; margin-bottom:22px; font-family:var(--font-serif); letter-spacing:-0.01em;">
+        Build things to find<br/>solutions to your <em style="font-style: italic; font-weight: 500; color: var(--accent-deep);">curiosity</em>.
+      </div>
+
+      <div style="font-size:14.5px; color:var(--ink-secondary); max-width:500px; line-height:1.8; margin-bottom:28px;">
+        Hi!! I'm Vaibhavi, an engineer who gets excited about the messy, interesting parts of data work. The dataset hiding a pattern nobody noticed. The pipeline that breaks at 2am and teaches you something new. The Friday night idea that turns into something actually useful.<br><br>
+        I studied CS, got curious about AI, research, and ended up building pipelines across more industries than I planned (currently pursuing a Master's in AI on the side). Along the way I figured out I learn best by picking up a real problem and building until I understand it.
+      </div>
+
+      <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:26px;">
+        <span class="tag tag-teal">Python</span>
+        <span class="tag tag-blue">dbt</span>
+        <span class="tag tag-blue">Snowflake</span>
+        <span class="tag tag-accent">Airflow</span>
+        <span class="tag tag-teal">Power BI</span>
+        <span class="tag tag-accent">Azure</span>
+        <span class="tag tag-purple">NLP / ML</span>
+        <span class="tag tag-gray">Statistics</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 3. APPROACH TO LIFE -->
+  <div class="section" style="background:#fff;">
+    <div class="label">My approach to life</div>
+    <div style="font-size:14.5px; color:var(--ink); line-height:1.85; max-width:580px; margin-bottom:20px;">
+      My default response to a hard problem is to build something. Every project here started as a problem I personally needed to solve.
+    </div>
+  </div>
+
+  <!-- 4. PROJECTS -->
+  <div class="section" id="projects" style="background:var(--cream);">
+    <div class="label">Projects</div>
+    <div class="project-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:10px;">
+
+      <a href="h1b-sponsor-tracker.html" class="card">
+        <div style="font-size:14.5px; font-weight:600; color:var(--ink); margin-bottom:6px; font-family:var(--font-serif);">H1B Sponsor Tracker</div>
+        <div style="font-size:12.5px; color:var(--ink-secondary); line-height:1.65; margin-bottom:10px;">Parses 3 years of DOL LCA data to identify cap-exempt employers, ranks by H1B volume, and surfaces careers page URLs through search APIs and Playwright scraping.</div>
+        <div><span class="tag tag-blue">Python</span><span class="tag tag-accent">Playwright</span><span class="tag tag-gray">Serper API</span></div>
+        <div style="margin-top:12px; font-size:11px; color:var(--accent); font-weight:500;">Read the full breakdown →</div>
+      </a>
+
+      <a href="job-market-analyzer.html" class="card">
+        <div style="font-size:14.5px; font-weight:600; color:var(--ink); margin-bottom:6px; font-family:var(--font-serif);">Job Market Analyzer</div>
+        <div style="font-size:12.5px; color:var(--ink-secondary); line-height:1.65; margin-bottom:10px;">Parses PDF resumes, aggregates postings across US/EU/India via APIs, uses HuggingFace NER, spaCy, and zero-shot classifiers to extract skills, seniority, and visa requirements, then ranks markets by fit.</div>
+        <div><span class="tag tag-purple">HuggingFace</span><span class="tag tag-teal">spaCy</span><span class="tag tag-blue">Python</span></div>
+        <div style="margin-top:12px; font-size:11px; color:var(--accent); font-weight:500;">Read the full breakdown →</div>
+      </a>
+
+      <a href="earthquake-dashboard.html" class="card">
+        <div style="font-size:14.5px; font-weight:600; color:var(--ink); margin-bottom:6px; font-family:var(--font-serif);">Earthquake Dashboard</div>
+        <div style="font-size:12.5px; color:var(--ink-secondary); line-height:1.65; margin-bottom:10px;">USGS GeoJSON feed cleaned through a pandas pipeline, surfaced via a Streamlit dashboard with maps, magnitude/depth correlations, and monthly trends. Containerized with Docker.</div>
+        <div><span class="tag tag-blue">Python</span><span class="tag tag-teal">Streamlit</span><span class="tag tag-accent">Docker</span></div>
+        <div style="margin-top:12px; font-size:11px; color:var(--accent); font-weight:500;">Read the full breakdown →</div>
+      </a>
+
+      <div class="card" style="grid-column:span 2; border-left:3px solid var(--accent); cursor:default;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+          <span style="font-size:14.5px; font-weight:600; color:var(--ink); font-family:var(--font-serif);">E-Commerce Analytics Pipeline</span>
+          <span class="building-badge">building</span>
+        </div>
+        <div style="font-size:12.5px; color:var(--ink-secondary); line-height:1.65; margin-bottom:10px;">End-to-end batch pipeline ingesting e-commerce transactions into Snowflake, modeled with a dbt star schema, orchestrated via Airflow, with a Power BI dashboard tracking revenue trends, customer segments, and return rates.</div>
+        <div><span class="tag tag-blue">Snowflake</span><span class="tag tag-teal">dbt</span><span class="tag tag-accent">Airflow</span><span class="tag tag-purple">Power BI</span></div>
+      </div>
+
+      <div class="card" style="grid-column:span 2; border-left:3px solid var(--accent); cursor:default;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+          <span style="font-size:14.5px; font-weight:600; color:var(--ink); font-family:var(--font-serif);">Stock × Industry × Jobs</span>
+          <span class="building-badge">building</span>
+        </div>
+        <div style="font-size:12.5px; color:var(--ink-secondary); line-height:1.65; margin-bottom:10px;">Connects live stock market signals to BLS employment data to forecast which industries will see hiring growth next quarter. Applies time-series models and correlation analysis across sector returns and employment trends.</div>
+        <div><span class="tag tag-gray">ARIMA / Prophet</span><span class="tag tag-blue">BLS API</span><span class="tag tag-accent">Yahoo Finance</span><span class="tag tag-teal">Streamlit</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 5. HOW I THINK -->
+  <div class="section" style="background:#fff;">
+    <div class="label">How I think</div>
+    <div style="font-size:14.5px; color:var(--ink); line-height:1.85; max-width:580px;">
+      I love products. I care about the person on the other end, so before building anything, I try to understand why and how it will actually help them. That means mapping the whole workflow before writing a single line of code: inputs, outputs, usability, dependencies, failure points.<br><br>
+      As I build each layer, I work through three questions: why does this work, why might it break, and how can I make it more reliable and cost-efficient. When something fails, I don't paste the error into an LLM and accept whatever comes back. I read the error, understand what it actually means, form my own hypothesis about the cause, and then use AI to pressure-test that hypothesis. The difference matters. One builds understanding. The other just clears the blocker.
+    </div>
+  </div>
+
+  <!-- 6. WRITING -->
+  <div class="section" id="writing" style="background:var(--cream);">
+    <div class="label">Writing</div>
+    <div class="project-grid" style="display:grid; grid-template-columns:1fr; gap:12px; margin-top:10px;">
+      <a href="article-visa-problem.html" class="card">
+        <div style="font-size:15px; font-weight:600; color:var(--ink); font-family:var(--font-serif); margin-bottom:8px;">How I built a tool to solve my own visa problem</div>
+        <div style="font-size:12.5px; color:var(--ink-secondary); line-height:1.75;">
+          A personal story about two layoffs, the broken H1B playbook, and the data pipeline I built to surface cap-exempt sponsors from messy Department of Labor disclosures.
+        </div>
+      </a>
+
+      <a href="article-ai-interdisciplinary.html" class="card">
+        <div style="font-size:15px; font-weight:600; color:var(--ink); font-family:var(--font-serif); margin-bottom:8px;">Why interdisciplinary thinking beats depth in the AI era</div>
+        <div style="font-size:12.5px; color:var(--ink-secondary); line-height:1.75;">
+          Why AI raises the value of broad problem framing, systems thinking, and cross-domain insight more than pure technical depth alone.
+        </div>
+      </a>
+
+      <div class="card" style="cursor:default; opacity:0.95;">
+        <div style="font-size:15px; font-weight:600; color:var(--ink); font-family:var(--font-serif); margin-bottom:8px;">Can stock market signals predict where hiring will grow? (Coming soon)</div>
+        <div style="font-size:12.5px; color:var(--ink-secondary); line-height:1.75;">
+          A piece on connecting market moves with labor trends, with the same evidence-based thinking I apply to every data project.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. RESUME -->
+  <div class="section" id="resume" style="background:#fff;">
+    <div class="label">Resume</div>
+    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px;">
+      <div style="font-size:13.5px; color:var(--ink-secondary); max-width:440px; line-height:1.7;">Data Engineer with experience across medical research, talent intelligence, and computational sciences. MS Computer Science · MS AI (in progress).</div>
+      <div style="display:flex; gap:8px;">
+        <a href="resume.pdf" target="_blank" style="font-size:12px; padding:7px 16px; border:0.5px solid var(--cream-border); border-radius:4px; color:var(--ink-secondary); background:var(--cream); cursor:pointer;">View PDF ↗</a>
+        <a href="resume.pdf" download style="font-size:12px; padding:7px 16px; background:var(--accent); color:#fff; border-radius:4px; font-weight:500; cursor:pointer;">Download ↓</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. CONTACT -->
+  <div class="section" style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:24px; background:var(--cream);">
+    <div style="flex:1; min-width:200px;">
+      <div class="label">Open to</div>
+      <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
+        <span class="tag tag-teal">Full-time roles</span>
+        <span class="tag tag-accent">Contract roles</span>
+        <span class="tag tag-blue">Open source</span>
+        <span class="tag tag-purple">Coffee chats</span>
+        <span class="tag tag-gray">Collaborations</span>
+      </div>
+    </div>
+    <div style="flex:1; min-width:200px;">
+      <div class="label">Get in touch</div>
+      <div style="margin-top:8px; display:flex; align-items:center; gap:14px;">
+        <img src="6DC2E50F-2630-4F49-B43F-E090A4F5DBBA_1_105_c.jpeg" alt="Vaibhavi Mutya" style="width:86px; height:86px; border-radius:999px; object-fit:cover; border:1px solid var(--cream-border);" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+        <div class="profile-fallback" style="display:none;width:86px;height:86px;border-radius:999px;background:linear-gradient(135deg,#e9e6e1,#f5f3f0);align-items:center;justify-content:center;border:1px solid var(--cream-border);font-weight:600;color:var(--ink);font-family:var(--font-serif);">VM</div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <a href="mailto:vaaibhaviii@gmail.com" style="font-size:13.5px; color:var(--ink-secondary);">✉ vaaibhaviii@gmail.com</a>
+          <a href="https://github.com/vaibhavimutya?tab=repositories" target="_blank" style="font-size:13.5px; color:var(--ink-secondary);">↗ github.com/vaibhavimutya</a>
+          <span style="font-size:11px; color:var(--ink-tertiary); margin-top:2px;">I reply within 24 hours.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div style="padding:18px 36px; border-top:0.5px solid var(--cream-border); display:flex; justify-content:space-between; align-items:center; background:#fff; flex-wrap:wrap; gap:8px;">
+    <span style="font-size:11px; color:var(--ink-tertiary);">Vaibhavi Mutya · Bay Area · vaibhavimutya.github.io</span>
+    <span style="font-size:11px; color:var(--ink-tertiary);">Built by me, obviously.</span>
+  </div>
+
+</div>
+</body>
+</html>

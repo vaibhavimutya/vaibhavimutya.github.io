@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>How I built a tool to solve my own visa problem</title>
+<meta name="description" content="A personal account of building an H1B sponsorship tracker from DOL data." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --cream: #EDE4DB;
+    --cream-warm: #E2D1C0;
+    --cream-border: #CBBBAE;
+    --ink: #1C1917;
+    --ink-secondary: #57534E;
+    --ink-tertiary: #A8A29E;
+    --accent: #C2692A;
+    --accent-deep: #A75620;
+    --accent-light: #FAEADA;
+    --font-serif: "Fraunces", Georgia, serif;
+    --font-sans: "DM Sans", -apple-system, sans-serif;
+  }
+  html, body { background: var(--cream); }
+  body { font-family: var(--font-sans); color: var(--ink); -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 880px; margin: 0 auto; background: var(--cream); }
+  .label { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-tertiary); margin-bottom: 14px; }
+  .section { padding: 32px 36px; border-bottom: 0.5px solid var(--cream-border); }
+  .nav-link { font-size: 12px; color: var(--ink-secondary); padding: 4px 11px; border: 0.5px solid var(--cream-border); border-radius: 4px; cursor: pointer; background: var(--cream); transition: all 0.15s; }
+  .nav-link:hover { background: #fff; color: var(--ink); }
+  @media (max-width: 640px) { .section { padding: 26px 22px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 36px; border-bottom:0.5px solid var(--cream-border); background:rgba(247,243,238,0.92); backdrop-filter:blur(8px); position:sticky; top:0; z-index:10;">
+    <span style="font-size:15px; font-weight:600; color:var(--ink); font-family:var(--font-serif); letter-spacing:0.01em;">Curious Soul</span>
+    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="index.html#projects" class="nav-link">Projects</a>
+      <a href="index.html#writing" class="nav-link">Writing</a>
+      <a href="index.html#resume" class="nav-link">Resume</a>
+      <a href="mailto:vaaibhaviii@gmail.com" style="font-size:12px; color:#fff; padding:4px 12px; background:var(--accent); border-radius:4px; font-weight:500; cursor:pointer;">collaborate ↗</a>
+    </div>
+  </div>
+
+  <div class="section" style="background:#fff;">
+    <div class="label">Writing</div>
+    <h1 style="font-size:34px; font-family:var(--font-serif); margin-bottom:18px; line-height:1.1; color:var(--ink);">How I built a tool to solve my own visa problem</h1>
+    <div style="font-size:14.5px; color:var(--ink-secondary); line-height:1.8; margin-bottom:22px; max-width:760px;">
+      The tech industry moves fast and sometimes it moves you out the door before you're ready. I faced two layoffs in three years, both due to restructuring and funding issues that had nothing to do with my work. The first one knocked me down hard. I spent weeks convinced my career was over, that the timing was wrong, that the market was impossible. The second one hit differently. By then I'd learned something: waiting for the right circumstances is a losing strategy. You have to build your way out.
+    </div>
+    <div style="font-size:13px; color:var(--ink-secondary); line-height:1.85; max-width:760px;">
+      <p><strong>The problem with the standard H1B playbook</strong><br>
+      For most international candidates in the US, the H1B process feels like a lottery you just have to accept. You apply to large companies, hope your number gets drawn in the annual cap, and if it doesn't, you start the cycle over. What most people don't realize or don't act on is that a significant category of employers exists entirely outside that lottery.</p>
+      <p>Cap-exempt employers — universities, nonprofits, certain research institutions and teaching hospitals — can sponsor H1B visas year-round with no cap and no lottery. The problem is there's no clean, searchable directory of them. The data exists, but it is buried in Department of Labor LCA disclosure files: multi-year Excel spreadsheets with inconsistent formatting, thousands of rows, and no obvious way to filter for what actually matters: which organizations have a real track record of sponsoring, and are they currently hiring for roles like mine?</p>
+      <p>Job boards like HigherEdJobs and Idealist exist, but they don't solve the core problem. In today's restrictive market, many nonprofits aren't sponsoring at all. What I needed was a ranked list of employers with proven sponsorship history, linked directly to where their jobs actually live.</p>
+      <p><strong>Building the pipeline</strong><br>
+      The system downloads three years of DOL LCA data, parses each file to identify cap-exempt employers using NAICS codes and keyword filters, aggregates H1B petition counts by employer across years, and ranks the top sponsors. It then uses the Serper Google Search API to locate each employer's careers page and writes everything to a clean CSV.</p>
+      <p>The filtering logic is a hybrid: NAICS prefixes for higher education, hospitals, and membership organizations, combined with employer name keywords like "university", "medical center", "institute", "national laboratory". Neither approach alone is sufficient; the combination catches what either misses.</p>
+      <p>Finding clean careers page URLs turned out to be the most fragile step. Direct Google scraping triggers bot detection. Serper's API solves that, but the results still require filtering: aggregator sites like LinkedIn, Indeed, and Glassdoor get blocked, and URL paths are checked for careers or jobs keywords to improve link quality.</p>
+      <p><strong>The insight I didn't expect</strong><br>
+      I went into this project thinking the hard problem was finding job listings. It wasn't. The hard problem is knowing which employers are worth applying to in the first place.</p>
+      <p>Most candidates waste enormous energy applying broadly across hundreds of companies with no sponsorship history, inconsistent hiring patterns, and no real fit signal. Narrowing the universe first to organizations that have actually sponsored H1Bs consistently over three years changes the entire strategy. You apply to fewer places with much higher precision.</p>
+      <p>The output isn't exciting to look at. It's two CSV files. But what those files represent is a fundamentally different way of approaching an international job search: evidence-based, not luck-based.</p>
+      <p><strong>What's next</strong><br>
+      A searchable frontend UI so anyone can filter by state, industry, and H1B sponsorship volume without touching a spreadsheet. And an extension to the job scraping layer — more reliable extraction from the university and nonprofit portals that the current Playwright scraper struggles with.</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>
