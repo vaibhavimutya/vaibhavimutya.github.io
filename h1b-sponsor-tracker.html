@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>H1B Cap-Exempt Sponsor Tracker — Vaibhavi Mutya</title>
+<meta name="description" content="A pipeline that turns 3 years of raw DOL H-1B disclosure data into a clean list of cap-exempt employers and surfaces their open IT roles via ATS-aware scraping." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --cream: #F7F3EE;
+    --cream-warm: #F5EDDF;
+    --cream-dark: #EDE8E1;
+    --cream-border: #D9D2C8;
+    --ink: #1C1917;
+    --ink-secondary: #57534E;
+    --ink-tertiary: #A8A29E;
+    --accent: #C2692A;
+    --accent-deep: #A75620;
+    --accent-light: #FAEADA;
+    --teal: #1D6B5A;
+    --teal-light: #E0F0EB;
+    --blue: #2B5DA1;
+    --blue-light: #E3EDF8;
+    --purple: #5B45A8;
+    --purple-light: #EDEAF8;
+    --font-serif: "Fraunces", Georgia, serif;
+    --font-sans: "DM Sans", -apple-system, sans-serif;
+    --font-mono: "JetBrains Mono", Menlo, monospace;
+  }
+  html, body { background: var(--cream); }
+  body { font-family: var(--font-sans); color: var(--ink); -webkit-font-smoothing: antialiased; line-height: 1.6; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 760px; margin: 0 auto; background: var(--cream); }
+  .tag { display: inline-block; font-size: 11px; padding: 3px 9px; border-radius: 3px; font-weight: 500; margin-right: 4px; margin-top: 4px; letter-spacing: 0.01em; }
+  .tag-blue { background: var(--blue-light); color: var(--blue); }
+  .tag-teal { background: var(--teal-light); color: var(--teal); }
+  .tag-accent { background: var(--accent-light); color: var(--accent); }
+  .tag-purple { background: var(--purple-light); color: var(--purple); }
+  .tag-gray { background: var(--cream-dark); color: var(--ink-secondary); }
+  .nav-link { font-size: 12px; color: var(--ink-secondary); padding: 4px 11px; border: 0.5px solid var(--cream-border); border-radius: 4px; background: var(--cream); transition: all 0.15s; }
+  .nav-link:hover { background: #fff; color: var(--ink); }
+  .hero { padding: 48px 36px 40px; background: var(--cream-warm); border-bottom: 0.5px solid var(--cream-border); position: relative; overflow: hidden; }
+  .hero-contour { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: 0.35; filter: blur(10px); }
+  .hero-content { position: relative; z-index: 2; }
+  .section { padding: 40px 36px; border-bottom: 0.5px solid var(--cream-border); background: #fff; }
+  .section-alt { background: var(--cream); }
+  .section h2 { font-family: var(--font-serif); font-weight: 600; font-size: 22px; color: var(--ink); margin-bottom: 18px; letter-spacing: -0.005em; }
+  .section h3 { font-family: var(--font-serif); font-weight: 600; font-size: 16px; color: var(--ink); margin-top: 26px; margin-bottom: 10px; }
+  .section p { font-size: 14.5px; color: var(--ink-secondary); line-height: 1.85; margin-bottom: 14px; max-width: 640px; }
+  .section ul { margin: 8px 0 14px 0; padding-left: 20px; max-width: 640px; }
+  .section li { font-size: 14.5px; color: var(--ink-secondary); line-height: 1.85; margin-bottom: 6px; }
+  .section strong { color: var(--ink); font-weight: 600; }
+  .label { font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-deep); margin-bottom: 14px; }
+  .kicker { font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-deep); margin-bottom: 16px; }
+  .diagram { background: var(--cream); border: 0.5px solid var(--cream-border); border-radius: 8px; padding: 22px 24px; margin: 18px 0 8px; font-family: var(--font-mono); font-size: 12px; line-height: 1.65; color: var(--ink); white-space: pre; overflow-x: auto; }
+  .bottleneck { border-left: 2px solid var(--accent); background: var(--cream); border-radius: 0 6px 6px 0; padding: 16px 20px; margin: 16px 0; }
+  .bottleneck-title { font-family: var(--font-serif); font-weight: 600; font-size: 15.5px; color: var(--ink); margin-bottom: 6px; }
+  .bottleneck-label { font-size: 10.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-right: 6px; }
+  .bottleneck-label.problem { color: var(--accent-deep); }
+  .bottleneck-label.fix { color: var(--teal); }
+  code { font-family: var(--font-mono); font-size: 12.5px; background: var(--cream-dark); padding: 1px 6px; border-radius: 3px; color: var(--ink); }
+  .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--accent); font-weight: 500; margin-bottom: 24px; }
+  .back-link:hover { gap: 10px; }
+  .cta { display: inline-block; padding: 10px 20px; background: var(--accent); color: #fff; border-radius: 6px; font-size: 13.5px; font-weight: 500; }
+  .cta-secondary { background: #fff; color: var(--ink); border: 0.5px solid var(--cream-border); }
+
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin: 18px 0 8px; max-width: 640px; }
+  .stat { background: var(--cream); border: 0.5px solid var(--cream-border); border-radius: 8px; padding: 16px 18px; }
+  .stat-num { font-family: var(--font-serif); font-size: 26px; font-weight: 600; color: var(--accent-deep); line-height: 1; margin-bottom: 4px; }
+  .stat-label { font-size: 11.5px; color: var(--ink-secondary); letter-spacing: 0.02em; }
+
+  @media (max-width: 640px) {
+    .section, .hero { padding-left: 22px; padding-right: 22px; }
+    .diagram { font-size: 10.5px; padding: 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- NAV -->
+  <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 36px; border-bottom:0.5px solid var(--cream-border); background:rgba(247,243,238,0.92); backdrop-filter:blur(8px); position:sticky; top:0; z-index:10;">
+    <a href="index.html" style="font-size:15px; font-weight:600; color:var(--ink); font-family:var(--font-serif); letter-spacing:0.01em;">Curious Soul</a>
+    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+      <a href="index.html#projects" class="nav-link">projects</a>
+      <a href="index.html#writing" class="nav-link">writing</a>
+      <a href="mailto:mvaibhavi309@gmail.com" style="font-size:12px; color:#fff; padding:4px 12px; background:var(--accent); border-radius:4px; font-weight:500;">collaborate ↗</a>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <svg class="hero-contour" viewBox="0 0 1200 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="cFadeH" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#C2692A" stop-opacity="0.0"/>
+          <stop offset="0.5" stop-color="#C2692A" stop-opacity="0.45"/>
+          <stop offset="1" stop-color="#A75620" stop-opacity="0.15"/>
+        </linearGradient>
+      </defs>
+      <g fill="none" stroke="url(#cFadeH)" stroke-width="1">
+        <path d="M -50 340 C 220 290, 440 380, 660 320 S 1000 240, 1250 310"/>
+        <path d="M -50 300 C 220 240, 440 340, 660 270 S 1000 190, 1250 260"/>
+        <path d="M -50 260 C 220 190, 440 300, 660 220 S 1000 140, 1250 210"/>
+        <path d="M -50 220 C 220 140, 440 260, 660 170 S 1000  90, 1250 160"/>
+        <path d="M -50 180 C 220  90, 440 220, 660 120 S 1000  40, 1250 110"/>
+        <path d="M -50 140 C 220  40, 440 180, 660  70 S 1000 -10, 1250  60"/>
+      </g>
+    </svg>
+
+    <div class="hero-content">
+      <a href="index.html" class="back-link">← Back to all projects</a>
+      <div class="kicker">Project · Personal · Shipped</div>
+      <h1 style="font-size:36px; font-weight:600; font-family:var(--font-serif); line-height:1.12; letter-spacing:-0.015em; color:var(--ink); margin-bottom:16px; max-width:580px;">
+        H1B Cap-Exempt Sponsor Tracker
+      </h1>
+      <p style="font-size:15.5px; color:var(--ink-secondary); line-height:1.7; max-width:560px; margin-bottom:20px;">
+        A pipeline that turns three years of raw federal H-1B disclosure spreadsheets into a clean list of cap-exempt employers, then scrapes their careers pages to surface real, currently-open IT roles.
+      </p>
+      <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:8px;">
+        <span class="tag tag-blue">Python</span>
+        <span class="tag tag-accent">Playwright</span>
+        <span class="tag tag-gray">Serper API</span>
+        <span class="tag tag-teal">DOL OFLC data</span>
+        <span class="tag tag-purple">ATS-aware scraping</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE PROBLEM -->
+  <div class="section">
+    <div class="label">01 · The problem & why I built it</div>
+    <h2>The H-1B cap is a lottery. Cap-exempt employers aren't.</h2>
+    <p>
+      Most H-1B applicants are subject to the annual cap and the lottery, which means even a perfect application has a ~25% chance of being selected. But a category of employers is <strong>cap-exempt</strong>: universities, non-profit research organizations, government research labs, and qualifying medical centers. For people who can target them, those employers are a stable sponsorship path that bypasses the lottery entirely.
+    </p>
+    <p>
+      The catch: there's no clean public list of who they are. The Department of Labor publishes raw LCA disclosure spreadsheets every year, but they're enormous, messy, and don't flag cap-exemption. And once you've identified a sponsor, you still have to find their careers page and check if they're hiring anything you can actually do.
+    </p>
+    <p>
+      I built this for my own visa situation. The system aggregates three years of DOL data, filters for cap-exempt employers using NAICS codes plus name heuristics, ranks them by hiring volume, finds each company's careers page, and scrapes open IT roles. <strong>What was a week of manual research becomes a CSV.</strong>
+    </p>
+  </div>
+
+  <!-- ARCHITECTURE -->
+  <div class="section section-alt">
+    <div class="label">02 · Architecture & flow</div>
+    <h2>A linear pipeline with resumable checkpoints.</h2>
+    <p>Each stage is a separate script and writes its output to disk before the next stage reads it. That separation matters because the scraping stage is slow and fragile. I want to be able to interrupt and resume without re-downloading 200MB of DOL data.</p>
+
+<div class="diagram">  DOL OFLC LCA Excel (2024, 2025, 2026)
+              │
+              ▼
+       parse + filter
+   ┌──────────────────────────┐
+   │ NAICS prefix match       │ ← 6113 (univ), 6221 (hospital),
+   │ + employer name keywords │   8139 (nonprofit assoc)
+   └──────────────────────────┘
+              │
+              ▼
+   aggregate H-1B counts per employer (2024–2026)
+              │
+              ▼
+   careers page lookup via Serper API
+   └─ filter out aggregators
+      (LinkedIn, Indeed, Glassdoor, ZipRecruiter…)
+              │
+              ▼
+   h1b_cap_exempt_sponsors.csv
+              │
+              ▼
+   Playwright scraper (with checkpoint.json)
+   ├─ ATS-specific extractors:
+   │   Greenhouse, Lever, Workday, SmartRecruiters,
+   │   iCIMS, Jobvite, Ashby, Taleo, SuccessFactors
+   └─ Generic fallback for unknown sites
+              │
+              ▼
+            it_jobs.csv</div>
+  </div>
+
+  <!-- TECHNICAL DECISIONS -->
+  <div class="section">
+    <div class="label">03 · Key technical decisions & bottlenecks</div>
+    <h2>The hard parts were never in the data parsing.</h2>
+    <p>
+      Parsing the DOL spreadsheets was tedious but mechanical. The interesting work was deciding <em>which</em> employers count as cap-exempt, how to find their careers pages without getting blocked, and how to scrape job listings reliably across dozens of different ATS vendors.
+    </p>
+
+    <div class="bottleneck">
+      <div class="bottleneck-title"><span class="bottleneck-label problem">Decision</span> Filtering for cap-exempt status</div>
+      <p style="margin-top:6px;">DOL doesn't tag employers as cap-exempt. That classification is downstream of who they are. I needed a hybrid rule set.</p>
+      <p><span class="bottleneck-label fix">Approach</span> Two-pass filter:</p>
+      <ul>
+        <li><strong>NAICS prefix match.</strong> Codes <code>6113</code> (colleges/universities), <code>6221</code> (general medical/surgical hospitals), <code>8139</code> (nonprofit business associations).</li>
+        <li><strong>Employer name keyword match.</strong> University, medical center, institute, national laboratory, association, foundation.</li>
+      </ul>
+      <p><strong>Why hybrid:</strong> NAICS alone misses employers that are misclassified or use parent-company codes. Name matching alone catches generic "Institute" entities that aren't actually cap-exempt. Running both and unioning gives broad coverage with manageable false positives, which a human can review in the CSV.</p>
+    </div>
+
+    <div class="bottleneck">
+      <div class="bottleneck-title"><span class="bottleneck-label problem">Decision</span> Finding careers pages without scraping Google</div>
+      <p style="margin-top:6px;">Once I have an employer list, I need their actual careers URL. Scraping Google directly gets blocked quickly and is fragile.</p>
+      <p><span class="bottleneck-label fix">Approach</span> Use the <strong>Serper.dev API</strong>, which exposes Google search results through a clean REST interface. I filter results aggressively to drop aggregator sites (LinkedIn, Indeed, Glassdoor, ZipRecruiter, Wikipedia) because those don't give me the company's own ATS URL.</p>
+      <p><strong>Why this matters:</strong> Aggregator URLs lead to listings that may be stale, missing, or behind login walls. The company's own careers page is where the source of truth lives.</p>
+    </div>
+
+    <div class="bottleneck">
+      <div class="bottleneck-title"><span class="bottleneck-label problem">Bottleneck</span> Every careers page is different</div>
+      <p style="margin-top:6px;">There's no single way to scrape job listings. Workday is a SPA that hides content behind XHR. Greenhouse uses iframes. Some universities use 20-year-old static HTML. A single generic scraper covers maybe 40% of cases.</p>
+      <p><span class="bottleneck-label fix">Approach</span> Use <strong>Playwright</strong> for headless browser automation (it handles dynamic JS-rendered content), and write <strong>ATS-specific extractors</strong> for the common vendors: Greenhouse, Lever, Workday, SmartRecruiters, iCIMS, Jobvite, Ashby, Taleo, SuccessFactors. When the URL doesn't match a known ATS pattern, fall back to a generic page scanner that looks for common job-listing markup.</p>
+      <p><strong>Why this combination:</strong> The ATS-specific path is reliable and fast for the ~70% of employers using a known vendor. The generic fallback gets me partial coverage on the long tail without writing a custom scraper for every weird site.</p>
+    </div>
+
+    <div class="bottleneck">
+      <div class="bottleneck-title"><span class="bottleneck-label problem">Bottleneck</span> Resilience: the scrape takes hours</div>
+      <p style="margin-top:6px;">Scraping a few hundred careers pages with a real browser takes serious time. A crash three hours in shouldn't mean starting over.</p>
+      <p><span class="bottleneck-label fix">Approach</span> Save progress to <code>h1b_cap_exempt_checkpoint.json</code> after each employer. On restart, skip employers already processed. Add polite delays between requests to avoid rate limits. A separate <code>cron_jobs.py</code> checks whether the sponsor CSV exists and whether enough careers pages are already populated before rerunning the search step, so it's idempotent on a schedule.</p>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="section section-alt">
+    <div class="label">04 · Results & what they mean</div>
+    <h2>What this turns into, practically.</h2>
+
+    <div class="stat-grid">
+      <div class="stat">
+        <div class="stat-num">2 files</div>
+        <div class="stat-label">CSVs that did not exist before</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">3 years</div>
+        <div class="stat-label">of federal disclosure data aggregated</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">9 ATS</div>
+        <div class="stat-label">vendors covered with dedicated extractors</div>
+      </div>
+    </div>
+
+    <h3>The outputs</h3>
+    <ul>
+      <li><strong><code>h1b_cap_exempt_sponsors.csv</code></strong>. Employer name, careers page URL, state, and H-1B worker counts for 2024 / 2025 / 2026.</li>
+      <li><strong><code>it_jobs.csv</code></strong>. Currently-open IT roles at those employers: job title, URL, location, posting date, and scrape timestamp.</li>
+    </ul>
+
+    <h3>What it actually means</h3>
+    <p>
+      It turns raw federal disclosure data (technically public, but practically unusable) into something actionable. If I'm a candidate trying to bypass the H-1B lottery, I now have a ranked list of who actively sponsors and what they're hiring right now. If I'm doing immigration research or recruiting, I have a fresh employer panel I can rebuild any time the DOL publishes new disclosures.
+    </p>
+    <p style="font-size: 13.5px; color: var(--ink-tertiary); font-style: italic;">
+      The deeper point: a lot of "impossible to find" information isn't actually hidden. It's published in a format nobody wants to deal with. Sometimes the highest-leverage thing you can build is the cleanup layer.
+    </p>
+  </div>
+
+  <!-- WHAT'S NEXT -->
+  <div class="section">
+    <div class="label">05 · What I'd build next</div>
+    <h2>The honest list of things I'd improve.</h2>
+    <ul>
+      <li><strong>A public web UI.</strong> Right now you have to run the pipeline locally. I want a hosted version where someone can filter by state, role type, and employer size.</li>
+      <li><strong>Job-title classification.</strong> The "IT jobs" filter is keyword-based. Adding a small classifier would let me carve out Data, ML, Backend, DevOps as separate tracks.</li>
+      <li><strong>Diff over time.</strong> Compare scrapes week-over-week to surface new openings the moment they're posted. Useful for high-demand cap-exempt employers.</li>
+      <li><strong>Better ATS coverage.</strong> Add SmartRecruiters, Personio, and Greenhouse iframe-embedded variants. The generic fallback handles them but with lower accuracy.</li>
+    </ul>
+  </div>
+
+  <!-- CTA -->
+  <div class="section section-alt" style="text-align:center;">
+    <div class="label" style="text-align:center;">See the code</div>
+    <p style="margin-left:auto; margin-right:auto;">All projects live on GitHub. Issues and PRs welcome.</p>
+    <div style="display:flex; gap:10px; justify-content:center; margin-top:20px; flex-wrap:wrap;">
+      <a href="https://github.com/vaibhavimutya?tab=repositories" target="_blank" class="cta">View on GitHub ↗</a>
+      <a href="mailto:mvaibhavi309@gmail.com" class="cta cta-secondary">Email me about this →</a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div style="padding:18px 36px; border-top:0.5px solid var(--cream-border); display:flex; justify-content:space-between; align-items:center; background:#fff; flex-wrap:wrap; gap:8px;">
+    <a href="index.html" style="font-size:11px; color:var(--ink-tertiary);">← vaibhavimutya.github.io</a>
+    <span style="font-size:11px; color:var(--ink-tertiary);">Built by me, obviously.</span>
+  </div>
+
+</div>
+</body>
+</html>
